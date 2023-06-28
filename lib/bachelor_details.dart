@@ -1,22 +1,42 @@
+import 'package:finder/providers/bachelors_favorites_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'models/bachelor.dart';
 
 class BachelorDetails extends StatefulWidget {
   final Bachelor bachelor;
-  final VoidCallback updateBachelorsLiked;
-  final bool isLiked;
 
-  const BachelorDetails(this.bachelor, this.updateBachelorsLiked, this.isLiked, {super.key});
+  const BachelorDetails(this.bachelor, {super.key});
 
   @override
   State<BachelorDetails> createState() => _BachelorDetailsState();
 }
 
 class _BachelorDetailsState extends State<BachelorDetails> {
-  void _like() {
-    setState(() {
-      widget.updateBachelorsLiked();
+  @override
+  Widget build(BuildContext context) {
+    final providerBachelorsLiked = Provider.of<BachelorsFavoritesProvider>(context);
+
+    MaterialStateProperty<Color> getBackgroundColor(){
+      return providerBachelorsLiked.isLiked(widget.bachelor)
+          ? MaterialStateProperty.all<Color>(Colors.red) :
+          MaterialStateProperty.all<Color>(Colors.white);
+    }
+
+    MaterialStateProperty<Color> getForegroundColor(){
+      return providerBachelorsLiked.isLiked(widget.bachelor)
+          ? MaterialStateProperty.all<Color>(Colors.white) :
+          MaterialStateProperty.all<Color>(Colors.red);
+    }
+
+    void updateBachelorsLiked(){
+      if(providerBachelorsLiked.isLiked(widget.bachelor)){
+        providerBachelorsLiked.remove(widget.bachelor);
+        return;
+      }
+
+      providerBachelorsLiked.add(widget.bachelor);
 
       ScaffoldMessenger
           .of(context)
@@ -31,18 +51,13 @@ class _BachelorDetailsState extends State<BachelorDetails> {
             backgroundColor: Colors.red,
           )
       );
-    });
-  }
+    }
 
-  MaterialStateProperty<Color> _getButtonColor(bool isLiked){
-    return isLiked ? MaterialStateProperty.all<Color>(Colors.red) : MaterialStateProperty.all<Color>(Colors.white);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Find your bachelor'),
+          title: Text(
+              '${widget.bachelor.firstname} ${widget.bachelor.lastname}'
+          ),
           backgroundColor: Colors.purple,
         ),
         body:
@@ -69,9 +84,9 @@ class _BachelorDetailsState extends State<BachelorDetails> {
                         Icon(
                           Icons.favorite,
                           size: 50,
-                          color: widget.isLiked ?
-                          Colors.red.withOpacity(0.75) :
-                          Colors.white.withOpacity(0.75),
+                          color: providerBachelorsLiked.isLiked(widget.bachelor) ?
+                            Colors.red.withOpacity(0.75) :
+                            Colors.white.withOpacity(0.75),
                         )
                       ]
                   ),
@@ -86,15 +101,15 @@ class _BachelorDetailsState extends State<BachelorDetails> {
                   ),
                   OutlinedButton(
                     onPressed: () {
-                      _like();
+                      updateBachelorsLiked();
                     },
                     style: ButtonStyle(
-                      foregroundColor: _getButtonColor(!widget.isLiked),
-                      backgroundColor: _getButtonColor(widget.isLiked),
+                      foregroundColor: getForegroundColor(),
+                      backgroundColor: getBackgroundColor(),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0))),
                     ),
-                    child: widget.isLiked ?
+                    child: providerBachelorsLiked.bachelorsLiked.contains(widget.bachelor) ?
                       const Text('Liked') :
                       const Text('Like to have a match'),
                   ),

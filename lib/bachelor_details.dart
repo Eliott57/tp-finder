@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'bachelors_master.dart';
 import 'models/bachelor.dart';
 
 class BachelorDetails extends StatefulWidget {
   final Bachelor bachelor;
+  final VoidCallback updateBachelorsLiked;
+  final bool isLiked;
 
-  BachelorDetails(this.bachelor, {super.key});
+  const BachelorDetails(this.bachelor, this.updateBachelorsLiked, this.isLiked, {super.key});
 
   @override
-  State<BachelorDetails> createState() => _bachelorDetailsState();
+  State<BachelorDetails> createState() => _BachelorDetailsState();
 }
 
-class _bachelorDetailsState extends State<BachelorDetails> {
-  bool _isLiked = false;
-
-  _like() {
+class _BachelorDetailsState extends State<BachelorDetails> {
+  void _like() {
     setState(() {
-      _isLiked = !_isLiked;
+      widget.updateBachelorsLiked();
 
       ScaffoldMessenger
           .of(context)
@@ -70,7 +69,7 @@ class _bachelorDetailsState extends State<BachelorDetails> {
                         Icon(
                           Icons.favorite,
                           size: 50,
-                          color: _isLiked ?
+                          color: widget.isLiked ?
                           Colors.red.withOpacity(0.75) :
                           Colors.white.withOpacity(0.75),
                         )
@@ -90,14 +89,14 @@ class _bachelorDetailsState extends State<BachelorDetails> {
                       _like();
                     },
                     style: ButtonStyle(
-                      foregroundColor: _getButtonColor(!_isLiked),
-                      backgroundColor: _getButtonColor(_isLiked),
+                      foregroundColor: _getButtonColor(!widget.isLiked),
+                      backgroundColor: _getButtonColor(widget.isLiked),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0))),
                     ),
-                    child: _isLiked ?
-                    const Text('Liked') :
-                    const Text('Like to have a match'),
+                    child: widget.isLiked ?
+                      const Text('Liked') :
+                      const Text('Like to have a match'),
                   ),
                 ]
             )

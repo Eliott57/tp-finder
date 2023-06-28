@@ -14,6 +14,18 @@ class BachelorsMaster extends StatefulWidget{
 
 class _BachelorsMasterState extends State<BachelorsMaster> {
   final List<Bachelor> _bachelors = BachelorSeeder();
+  final List<Bachelor> _bachelorsLiked = [];
+
+  void _updateBachelorsLiked(Bachelor bachelor){
+    setState(() {
+      if(_bachelorsLiked.contains(bachelor)){
+        _bachelorsLiked.remove(bachelor);
+        return;
+      }
+
+      _bachelorsLiked.add(bachelor);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +51,12 @@ class _BachelorsMasterState extends State<BachelorsMaster> {
                     Text(
                       '${bachelor.firstname} ${bachelor.lastname}',
                     ),
+                    if(_bachelorsLiked.contains(bachelor))
+                      const Icon(
+                        Icons.favorite,
+                        size: 15,
+                        color: Colors.red
+                      )
                   ]
               ),
               TextButton(
@@ -48,7 +66,7 @@ class _BachelorsMasterState extends State<BachelorsMaster> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => BachelorDetails(bachelor),
+                      builder: (context) => BachelorDetails(bachelor, () => _updateBachelorsLiked(bachelor), _bachelorsLiked.contains(bachelor)),
                     ),
                   );
                 },

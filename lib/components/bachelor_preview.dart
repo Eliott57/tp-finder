@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../bachelor_details.dart';
+import '../pages/bachelor_details.dart';
 import '../models/bachelor.dart';
 import '../providers/bachelors_favorites_provider.dart';
 

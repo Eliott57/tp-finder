@@ -2,7 +2,7 @@ import 'package:finder/providers/bachelors_favorites_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/bachelor.dart';
+import '../models/bachelor.dart';
 
 class BachelorDetails extends StatefulWidget {
   final Bachelor bachelor;

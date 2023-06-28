@@ -1,9 +1,9 @@
-import 'package:finder/bachelors_favorites.dart';
+import 'package:finder/pages/bachelors_favorites.dart';
 import 'package:flutter/material.dart';
 
-import 'components/bachelor_preview.dart';
-import 'database/seeders/bachelor_seeder.dart';
-import 'models/bachelor.dart';
+import '../components/bachelor_preview.dart';
+import '../database/seeders/bachelor_seeder.dart';
+import '../models/bachelor.dart';
 
 class BachelorsMaster extends StatefulWidget{
   BachelorsMaster() : super(key: GlobalKey());

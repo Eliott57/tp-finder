@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'bachelors_favorites.dart';
-import 'bachelors_master.dart';
+import 'pages/bachelors_favorites.dart';
+import 'pages/bachelors_master.dart';
 
 class BachelorsApp extends StatelessWidget{
   BachelorsApp() : super(key: GlobalKey());

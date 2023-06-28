@@ -2,8 +2,7 @@ import 'package:finder/providers/bachelors_favorites_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'components/bachelor_preview.dart';
-import 'models/bachelor.dart';
+import '../components/bachelor_preview.dart';
 
 class BachelorsFavorites extends StatefulWidget {
   const BachelorsFavorites({super.key});

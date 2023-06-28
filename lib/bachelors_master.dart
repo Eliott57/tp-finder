@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'bachelor_details.dart';
+import 'bachelor_details.dart';
 import 'database/seeders/bachelor_seeder.dart';
 import 'models/bachelor.dart';
 
@@ -12,39 +14,6 @@ class BachelorsMaster extends StatefulWidget{
 
 class _BachelorsMasterState extends State<BachelorsMaster> {
   final List<Bachelor> _bachelors = BachelorSeeder();
-  Bachelor? _bachelorToShow;
-  final List<Bachelor> _bachelorsLiked = [];
-
-  _setBachelorToShow({Bachelor? bachelor}){
-    setState(() {
-      _bachelorToShow = bachelor;
-    });
-  }
-
-  _toggleBachelorFromBachelorsLiked({Bachelor? bachelor}){
-    setState(() {
-      if(_bachelorsLiked.contains(bachelor)) {
-        _bachelorsLiked.remove(bachelor);
-        return;
-      }
-
-      ScaffoldMessenger
-          .of(context)
-          .showSnackBar(
-          const SnackBar(
-            content: Text(
-                'Match on the road !',
-                style: TextStyle(
-                    color: Colors.white
-                )
-            ),
-            backgroundColor: Colors.red,
-          )
-      );
-
-      _bachelorsLiked.add(bachelor!);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +39,6 @@ class _BachelorsMasterState extends State<BachelorsMaster> {
                     Text(
                       '${bachelor.firstname} ${bachelor.lastname}',
                     ),
-                    if(_bachelorsLiked.contains(bachelor))
-                      const Icon(
-                          Icons.favorite,
-                          size: 15.0,
-                          color: Colors.red
-                      )
                   ]
               ),
               TextButton(
@@ -83,7 +46,11 @@ class _BachelorsMasterState extends State<BachelorsMaster> {
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.purple),
                 ),
                 onPressed: () {
-                  _setBachelorToShow(bachelor: bachelor);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BachelorDetails(bachelor),
+                    ),
+                  );
                 },
                 child: const Text('Details'),
               )
@@ -93,88 +60,18 @@ class _BachelorsMasterState extends State<BachelorsMaster> {
       );
     }
 
-    Widget BachelorDetails() {
-      return Container(
-          height: MediaQuery.of(context).size.height,
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    Image(
-                        image: AssetImage(
-                            _bachelorToShow!.avatar
-                        ),
-                        height: 150,
-                        fit:BoxFit.fill
-                    ),
-                    Icon(
-                      Icons.favorite,
-                      size: 100.0,
-                      color: _bachelorsLiked.contains(_bachelorToShow) ?
-                      Colors.red.withOpacity(0.75) :
-                      Colors.white.withOpacity(0.75),
-                    )
-                  ]
-              ),
-              Text(
-                '${_bachelorToShow!.firstname} ${_bachelorToShow!.lastname}',
-              ),
-              Text(
-                'Job : ${_bachelorToShow!.job}',
-              ),
-              Text(
-                'About : ${_bachelorToShow!.description}',
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  _toggleBachelorFromBachelorsLiked(bachelor: _bachelorToShow);
-                },
-                style: ButtonStyle(
-                  foregroundColor: _bachelorsLiked.contains(_bachelorToShow) ?
-                    MaterialStateProperty.all<Color>(Colors.white) :
-                    MaterialStateProperty.all<Color>(Colors.red),
-                  backgroundColor: _bachelorsLiked.contains(_bachelorToShow) ?
-                    MaterialStateProperty.all<Color>(Colors.red) :
-                    MaterialStateProperty.all<Color>(Colors.white),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
-                ),
-                child: _bachelorsLiked.contains(_bachelorToShow) ?
-                const Text('Liked') :
-                const Text('Like to have a match'),
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white70),
-                ),
-                onPressed: () {
-                  _setBachelorToShow(bachelor: null);
-                },
-                child: const Text('Go back'),
-              )
-            ]
-          )
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Find your bachelor'),
         backgroundColor: Colors.purple,
       ),
       body:
-        _bachelorToShow == null ?
-          ListView.builder(
-            itemBuilder: (context, index) {
-              return BachelorPreview(bachelor: _bachelors[index]);
-            },
-            itemCount: _bachelors.length,
-          ) :
-            BachelorDetails()
+      ListView.builder(
+        itemBuilder: (context, index) {
+          return BachelorPreview(bachelor: _bachelors[index]);
+        },
+        itemCount: _bachelors.length,
+      )
     );
   }
 }

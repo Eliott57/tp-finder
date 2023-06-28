@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'bachelor_list.dart';
+import 'bachelors_master.dart';
 
-class BachelorApp extends StatelessWidget{
-  BachelorApp() : super(key: GlobalKey());
+class BachelorsApp extends StatelessWidget{
+  BachelorsApp() : super(key: GlobalKey());
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class BachelorApp extends StatelessWidget{
       theme: ThemeData(
           primaryColor: Colors.purple
       ),
-      home: BachelorList(),
+      home: BachelorsMaster(),
     );
   }
 }

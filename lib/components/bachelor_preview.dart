@@ -66,17 +66,20 @@ class _BachelorPreviewState extends State<BachelorPreview>{
                         size: 15,
                       ),
                     ),
-                    if(providerBachelorsLiked.isLiked(widget.bachelor))
-                      TextButton(
-                        onPressed: () {
-                          providerBachelorsLiked.remove(widget.bachelor);
-                        },
-                        child: const Icon(
-                          Icons.heart_broken,
-                          color: Colors.red,
-                          size: 15,
-                        ),
+                    TextButton(
+                      onPressed: () {
+                        providerBachelorsLiked.isLiked(widget.bachelor) ?
+                          providerBachelorsLiked.remove(widget.bachelor) :
+                          providerBachelorsLiked.add(widget.bachelor);
+                      },
+                      child: Icon(
+                        providerBachelorsLiked.isLiked(widget.bachelor) ?
+                          Icons.heart_broken :
+                            Icons.favorite,
+                        color: Colors.red,
+                        size: 15,
                       ),
+                    ),
                     TextButton(
                       onPressed: () {
                         providerBachelors.remove(widget.bachelor);

@@ -12,6 +12,14 @@ class BachelorsFavorites extends StatefulWidget {
 }
 
 class _BachelorsFavoritesState extends State<BachelorsFavorites> {
+  bool _gridViewMode = false;
+
+  void toggleGridViewMode(){
+    setState(() {
+      _gridViewMode = !_gridViewMode;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerBachelorsLiked = Provider.of<BachelorsFavoritesProvider>(context);
@@ -25,26 +33,66 @@ class _BachelorsFavoritesState extends State<BachelorsFavorites> {
                 padding: const EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const BachelorsFavorites(),
-                      ),
-                    );
+                    providerBachelorsLiked.bachelorsLiked = [];
                   },
                   child: const Icon(
-                    Icons.favorite,
+                    Icons.playlist_remove,
                     size: 26.0,
                   ),
                 )
             ),
           ],
         ),
-        body:
-        ListView.builder(
-          itemBuilder: (context, index) {
-            return BachelorPreview(providerBachelorsLiked.bachelorsLiked[index]);
-          },
-          itemCount: providerBachelorsLiked.bachelorsLiked.length,
+        body: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    toggleGridViewMode();
+                  },
+                  child: Icon(
+                    _gridViewMode ?
+                      Icons.list :
+                      Icons.grid_4x4,
+                    color: Colors.blue,
+                    size: 30,
+                  ),
+                ),
+                _gridViewMode ?
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return  Image(
+                          image: AssetImage(
+                              providerBachelorsLiked.bachelorsLiked[index].avatar
+                          ),
+                          height: 50,
+                          fit:BoxFit.fill
+                      );
+                    },
+                    itemCount: providerBachelorsLiked.bachelorsLiked.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                    ),
+                  ) :
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                        background: Container(
+                          color: Colors.red,
+                        ),
+                        key: ValueKey<int>(index),
+                        onDismissed: (DismissDirection direction) {
+                          providerBachelorsLiked.bachelorsLiked.remove(providerBachelorsLiked.bachelorsLiked[index]);
+                        },
+                        child: BachelorPreview(providerBachelorsLiked.bachelorsLiked[index]),
+                      );
+                    },
+                    itemCount: providerBachelorsLiked.bachelorsLiked.length,
+                  )
+              ],
+            )
         )
     );
   }

@@ -1,9 +1,12 @@
+import 'package:finder/components/bachelors_filters.dart';
 import 'package:finder/pages/bachelors_favorites.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/bachelor_preview.dart';
 import '../database/seeders/bachelor_seeder.dart';
 import '../models/bachelor.dart';
+import '../providers/bachelors_provider.dart';
 
 class BachelorsMaster extends StatefulWidget{
   BachelorsMaster() : super(key: GlobalKey());
@@ -13,10 +16,10 @@ class BachelorsMaster extends StatefulWidget{
 }
 
 class _BachelorsMasterState extends State<BachelorsMaster> {
-  final List<Bachelor> _bachelors = BachelorSeeder();
-
   @override
   Widget build(BuildContext context) {
+    final providerBachelors = Provider.of<BachelorsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Find your bachelor'),
@@ -40,12 +43,19 @@ class _BachelorsMasterState extends State<BachelorsMaster> {
           ),
         ],
       ),
-      body:
-      ListView.builder(
-        itemBuilder: (context, index) {
-          return BachelorPreview(_bachelors[index]);
-        },
-        itemCount: _bachelors.length,
+      body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const BachelorsFilters(),
+              ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return BachelorPreview(providerBachelors.filteredBachelors()[index]);
+                },
+                itemCount: providerBachelors.filteredBachelors().length,
+              )
+            ],
+          )
       )
     );
   }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../pages/bachelor_details.dart';
 import '../models/bachelor.dart';
 import '../providers/bachelors_favorites_provider.dart';
+import '../providers/bachelors_provider.dart';
 
 class BachelorPreview extends StatefulWidget{
   final Bachelor bachelor;
@@ -18,6 +19,7 @@ class _BachelorPreviewState extends State<BachelorPreview>{
   @override
   Widget build(BuildContext context) {
     final providerBachelorsLiked = Provider.of<BachelorsFavoritesProvider>(context);
+    final providerBachelors = Provider.of<BachelorsProvider>(context);
 
     return Card(
       shape: const RoundedRectangleBorder(),
@@ -51,9 +53,6 @@ class _BachelorPreviewState extends State<BachelorPreview>{
                 Row(
                   children: [
                     TextButton(
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.purple),
-                      ),
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -61,23 +60,34 @@ class _BachelorPreviewState extends State<BachelorPreview>{
                           ),
                         );
                       },
-                      child: const Text('Details'),
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.black,
+                        size: 15,
+                      ),
                     ),
                     if(providerBachelorsLiked.isLiked(widget.bachelor))
                       TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.purple),
-                        ),
                         onPressed: () {
                           providerBachelorsLiked.remove(widget.bachelor);
                         },
-                        child: const Text(
-                            'Unlike',
-                            style: TextStyle(
-                              color: Colors.red
-                            )
+                        child: const Icon(
+                          Icons.heart_broken,
+                          color: Colors.red,
+                          size: 15,
                         ),
-                      )
+                      ),
+                    TextButton(
+                      onPressed: () {
+                        providerBachelors.remove(widget.bachelor);
+                        providerBachelorsLiked.remove(widget.bachelor);
+                      },
+                      child: const Icon(
+                        Icons.block,
+                        color: Colors.red,
+                        size: 15,
+                      ),
+                    )
                   ]
                 )
               ]

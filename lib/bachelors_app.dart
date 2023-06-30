@@ -1,4 +1,5 @@
 import 'package:finder/providers/bachelors_favorites_provider.dart';
+import 'package:finder/providers/bachelors_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,8 @@ class BachelorsApp extends StatelessWidget{
     return MultiProvider(
       providers:
       [
-        ChangeNotifierProvider(create:  (context) => BachelorsFavoritesProvider())
+        ChangeNotifierProvider(create:  (context) => BachelorsFavoritesProvider()),
+        ChangeNotifierProvider(create:  (context) => BachelorsProvider())
       ],
       child:  MaterialApp(
         theme: ThemeData(
